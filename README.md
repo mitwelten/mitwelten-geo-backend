@@ -1,4 +1,4 @@
 # Mitwelten.org Geospatial Backend
 Geospatial backend
 
-Work in progress. Questions? Contact [martin.lacayo@fhnw.ch](mailto:martin.lacayo@fhnw.ch)
+Work in progress. Questions? Contact [mitwelten.technik@fhnw.ch](mailto:mitwelten.technik@fhnw.ch)
