@@ -4,7 +4,7 @@ import csv
 from lib import ogr2ogr
 
 cwd = os.path.dirname(os.path.realpath(__file__))
-secure_path = os.path.dirname(os.path.dirname(cwd))
+secure_path = os.path.dirname(cwd)
 connection_string = open(os.path.join(secure_path, "secure/connection_string.txt")).read()
 bird_path = os.path.join(cwd, "sample-birdnet.tsv")
 location_path = os.path.join(cwd, "sample-location.csv")
