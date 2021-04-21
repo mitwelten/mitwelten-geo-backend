@@ -1,7 +1,7 @@
 import os 
 import psycopg2
 import csv
-from ..lib import ogr2ogr
+from lib import ogr2ogr
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 secure_path = os.path.dirname(os.path.dirname(cwd))
