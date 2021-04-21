@@ -3,11 +3,16 @@ import psycopg2
 import csv
 from lib import ogr2ogr
 
+#database connetion strings
 cwd = os.path.dirname(os.path.realpath(__file__))
-secure_path = os.path.dirname(cwd)
-connection_string = open(os.path.join(secure_path, "secure/connection_string.txt")).read()
-bird_path = os.path.join(cwd, "sample-birdnet.tsv")
-location_path = os.path.join(cwd, "sample-location.csv")
+secure_path = os.path.join(os.path.dirname(cwd), "secure")
+pyscopg2_connection_string = open(os.path.join(secure_path, "psycopg2_connection_string.txt")).read()
+gdal_connection_string = open(os.path.join(secure_path, "gdal_connection_string.txt")).read()
+
+#sample data paths
+bird_path = os.path.join(cwd, "data/sample-birdnet.tsv")
+location_path = os.path.join(cwd, "data/sample-location.csv")
+extent_path = os.path.join(cwd, "data/extent.kml")
 
 #accessors
 def getPostGISVersion(cur):
@@ -58,13 +63,21 @@ def insertBirdNetData(cur, file_path, location_id, timestamp):
         for row in datareader:
             print(row)
 
+
+def insertVector(connection_string, in_path,table_name):
+    ogr2ogr.main(["","-f", "PostgreSQL", "PG:\"%s\"" % (connection_string), in_path, "-a_srs", "EPSG:4326", "-nln", table_name])
+    
 if __name__ == "__main__":
-    conn = psycopg2.connect(connection_string)
+    conn = psycopg2.connect(pyscopg2_connection_string)
     cur = conn.cursor()
 
     print("There are %i GeoServer tables.\n" % (len(getGSTables(cur))))
-    
 
+    insertVector(gdal_connection_string, extent_path,"gs_extent")
+    
+    print("There are %i GeoServer tables.\n" % (len(getGSTables(cur))))
+
+    
     #setupTables(cur)
     #insertBirdNetData(bird_path, location_id, timestamp):
     #insertLocationData(cur, location_path)
