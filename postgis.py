@@ -1,6 +1,7 @@
 import os 
 import psycopg2
 import csv
+import tempfile
 
 #os.environ["GDAL_LIBRARY_PATH"] =  "/usr/local/gdal/gdal-3.2.2/lib/libgdal.so"
 
@@ -10,7 +11,6 @@ from lib import ogr2ogr
 cwd = os.path.dirname(os.path.realpath(__file__))
 secure_path = os.path.join(os.path.dirname(cwd), "secure")
 pyscopg2_connection_string = open(os.path.join(secure_path, "psycopg2_connection_string_private.txt")).read()
-gdal_connection_string = open(os.path.join(secure_path, "gdal_connection_string_private.txt")).read()
 
 #sample data paths
 bird_path = os.path.join(cwd, "data/sample-birdnet.tsv")
@@ -67,7 +67,7 @@ def insertBirdNetData(cur, file_path, location_id, timestamp):
             print(row)
 
 
-def insertVector(cur, connection_string, in_path,table_name):
+def insertVector(cur, in_path,table_name):
     #check if table name exists already
     cur.execute("SELECT COUNT(*) FROM information_schema.tables WHERE table_name = %s", (table_name,))
     if cur.fetchone() == 1:
@@ -75,11 +75,15 @@ def insertVector(cur, connection_string, in_path,table_name):
     else:
         print("Attempting to create table %s" % table_name)
 
-    #create table
+    #convert to SQL
+    tmp = tempfile.NamedTemporaryFile()
     try:
-        ogr2ogr.main(["","-f", "PostgreSQL", "PG:\"%s\"" % (connection_string), in_path, "-a_srs", "EPSG:4326", "-nln", table_name])
+        ogr2ogr.main(["","-f", "PGDump", tmp.name, in_path, "-a_srs", "EPSG:4326", "-nln", table_name, "-lco", "GEOM_TYPE=geography"])
     except (RuntimeError):
-        raise psycopg2.errors.ConnectionException("GDAL appears to have failed to create table %s" % table_name)
+        raise psycopg2.errors.ConnectionException("GDAL appears to have failed to convert table %s" % in_path)
+
+    #create table
+    cur.execute(tmp.read())
 
     #add read permissions for geoserver group
     try:
@@ -95,7 +99,7 @@ if __name__ == "__main__":
 
     print("There are %i GeoServer tables." % (len(getGSTables(cur))))
 
-    insertVector(cur, gdal_connection_string, extent_path,"gs_extent")
+    insertVector(cur, extent_path,"gs_extent")
     
     print("There are %i GeoServer tables." % (len(getGSTables(cur))))
 
