@@ -25,14 +25,15 @@ wget http://download.osgeo.org/gdal/3.2.2/gdal-3.2.2.tar.gz
 tar -xvf gdal-3.2.2.tar.gz
 cd gdal-3.2.2
 #not sure if better to add --with-curl
-./configure --prefix=/usr/local/gdal/gdal-3.2.2 --with-python --with-pg
+#./configure --prefix=/usr/local/gdal/gdal-3.2.2 --with-python --with-pg
+./configure --with-python --with-pg
 #if necessary first make clean
 make
 sudo make install
 sudo pip3 install gdal-3.2.2/swig/python
-
+#export PATH="/usr/local/gdal/gdal-3.2.2/bin:$PATH"
 #confirm postgres support
-/usr/local/gdal/gdal-3.2.2/bin/gdalinfo --formats | grep PostGIS
-/usr/local/gdal/gdal-3.2.2/bin/ogr2ogr --formats | grep PostgreSQL
+gdalinfo --formats | grep PostGIS
+ogr2ogr --formats | grep PostgreSQL
 
 

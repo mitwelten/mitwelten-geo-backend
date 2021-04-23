@@ -1,13 +1,16 @@
 import os 
 import psycopg2
 import csv
+
+#os.environ["GDAL_LIBRARY_PATH"] =  "/usr/local/gdal/gdal-3.2.2/lib/libgdal.so"
+
 from lib import ogr2ogr
 
 #database connetion strings
 cwd = os.path.dirname(os.path.realpath(__file__))
 secure_path = os.path.join(os.path.dirname(cwd), "secure")
-pyscopg2_connection_string = open(os.path.join(secure_path, "psycopg2_connection_string.txt")).read()
-gdal_connection_string = open(os.path.join(secure_path, "gdal_connection_string.txt")).read()
+pyscopg2_connection_string = open(os.path.join(secure_path, "psycopg2_connection_string_private.txt")).read()
+gdal_connection_string = open(os.path.join(secure_path, "gdal_connection_string_private.txt")).read()
 
 #sample data paths
 bird_path = os.path.join(cwd, "data/sample-birdnet.tsv")
@@ -64,18 +67,37 @@ def insertBirdNetData(cur, file_path, location_id, timestamp):
             print(row)
 
 
-def insertVector(connection_string, in_path,table_name):
-    ogr2ogr.main(["","-f", "PostgreSQL", "PG:\"%s\"" % (connection_string), in_path, "-a_srs", "EPSG:4326", "-nln", table_name])
+def insertVector(cur, connection_string, in_path,table_name):
+    #check if table name exists already
+    cur.execute("SELECT COUNT(*) FROM information_schema.tables WHERE table_name = %s", (table_name,))
+    if cur.fetchone() == 1:
+        raise psycopg2.errors.DuplicateTable("%s table already exists" % table_name)
+    else:
+        print("Attempting to create table %s" % table_name)
+
+    #create table
+    try:
+        ogr2ogr.main(["","-f", "PostgreSQL", "PG:\"%s\"" % (connection_string), in_path, "-a_srs", "EPSG:4326", "-nln", table_name])
+    except (RuntimeError):
+        raise psycopg2.errors.ConnectionException("GDAL appears to have failed to create table %s" % table_name)
+
+    #add read permissions for geoserver group
+    try:
+        cur.execute("GRANT SELECT ON TABLE %s TO geoserver" % (table_name))
+    except (psycopg2.errors.UndefinedTable):
+        pass
+        
     
 if __name__ == "__main__":
     conn = psycopg2.connect(pyscopg2_connection_string)
     cur = conn.cursor()
 
-    print("There are %i GeoServer tables.\n" % (len(getGSTables(cur))))
 
-    insertVector(gdal_connection_string, extent_path,"gs_extent")
+    print("There are %i GeoServer tables." % (len(getGSTables(cur))))
+
+    insertVector(cur, gdal_connection_string, extent_path,"gs_extent")
     
-    print("There are %i GeoServer tables.\n" % (len(getGSTables(cur))))
+    print("There are %i GeoServer tables." % (len(getGSTables(cur))))
 
     
     #setupTables(cur)
