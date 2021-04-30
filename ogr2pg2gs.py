@@ -86,7 +86,7 @@ parser = argparse.ArgumentParser(description="Store vector data from a file in a
 parser.add_argument("-v", "--version", help="show program version", action="store_true")
 parser.add_argument("--demo", help="run with demo data", action="store_true")
 parser.add_argument("-l", "--log", help="Log activity to the specified file", action="store_true")
-parser.add_argument("--droptable", help="Drop table if it already exists", action="store_true")
+parser.add_argument("-dt", "--droptable", help="Drop table if it already exists", action="store_true")
 parser.add_argument("name", help="The table name to use for the vector data in PostGIS", type=str)
 parser.add_argument("path", help="Vector data to store in PostGIS and publish to GeoServer", type=pathlib.Path)
 
