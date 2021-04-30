@@ -116,6 +116,7 @@ if __name__ == "__main__":
     conn = psycopg2.connect(pyscopg2_connection_string)
     conn.autocommit = True
     cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS \"gs_extent\"")
 
     if args.droptable:
         log.info("Dropping table %s if it exists" % table_name)
