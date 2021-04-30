@@ -126,13 +126,13 @@ if __name__ == "__main__":
     if args.droptable:
         log.info("Dropping table %s if it exists" % table_name)
         dropTable(cur, table_name)
-        cur.close()
-        conn.commit()
-        conn.close()
-
-        log.debug("Reopening connection to database")
-        conn = psycopg2.connect(pyscopg2_connection_string)
-        cur = conn.cursor()
+##        cur.close()
+##        conn.commit()
+##        conn.close()
+##
+##        log.debug("Reopening connection to database")
+##        conn = psycopg2.connect(pyscopg2_connection_string)
+##        cur = conn.cursor()
 
     insertVector(cur, in_path, table_name)
 
