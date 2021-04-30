@@ -113,8 +113,8 @@ if __name__ == "__main__":
            gsconfig_username = open(os.path.join(secure_path, "private_gsconfig_username.txt")).read()
            gsconfig_password = open(os.path.join(secure_path, "private_gsconfig_key.txt")).read()
 
-           in_path = os.path.join(cwd, "data/extent.kml")
-           table_name = "gs_extent"
+##           in_path = os.path.join(cwd, "data/extent.kml")
+##           table_name = "gs_extent"
            
        except FileNotFoundError as e:
            log.error("Missing demo data")
