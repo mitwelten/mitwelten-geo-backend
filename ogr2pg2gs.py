@@ -92,7 +92,7 @@ parser.add_argument("path", help="Vector data to store in PostGIS and publish to
 if __name__ == "__main__":
     args = parser.parse_args()
 
-    in_path = str(args.path)
+    in_path = os.path.abspath(str(args.path))
     table_name = args.name
     
     if args.version:
