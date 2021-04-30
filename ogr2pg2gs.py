@@ -123,7 +123,7 @@ if __name__ == "__main__":
     cur = conn.cursor()
 
     if args.droptable:
-        logger.info("Dropping table %s if it exists" % table_name)
+        log.info("Dropping table %s if it exists" % table_name)
         dropTable(cur, table_name)
         conn.commit()
 
