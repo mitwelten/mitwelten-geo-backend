@@ -107,9 +107,9 @@ if __name__ == "__main__":
         gsconfig_username = open(os.path.join(secure_path, "private_gsconfig_username.txt")).read()
         gsconfig_password = open(os.path.join(secure_path, "private_gsconfig_key.txt")).read()
 
-   except FileNotFoundError as e:
-       log.error("Missing default credentials")
-       log.error(str(e))
+    except FileNotFoundError as e:
+        log.error("Missing default credentials")
+        log.error(str(e))
 
 
     log.info("Connecting to database")        
