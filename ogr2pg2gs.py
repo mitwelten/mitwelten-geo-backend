@@ -94,7 +94,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     table_name = args.name
-    in_path = args.path
+    in_path = str(args.path)
 
     if args.version:
         log.info("0.0.0")
