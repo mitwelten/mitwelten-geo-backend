@@ -84,7 +84,6 @@ def publishVector(cur, table_name, geoserver_user):
 
 parser = argparse.ArgumentParser(description="Store vector data from a file in a PostGIS database and publish it to GeoServer")
 parser.add_argument("-v", "--version", help="show program version", action="store_true")
-parser.add_argument("--demo", help="run with demo data", action="store_true")
 parser.add_argument("-l", "--log", help="Log activity to the specified file", action="store_true")
 parser.add_argument("-dt", "--droptable", help="Drop table if it already exists", action="store_true")
 parser.add_argument("name", help="The table name to use for the vector data in PostGIS", type=str)
@@ -93,32 +92,24 @@ parser.add_argument("path", help="Vector data to store in PostGIS and publish to
 if __name__ == "__main__":
     args = parser.parse_args()
 
-    table_name = args.name
     in_path = str(args.path)
-
+    table_name = args.name
+    
     if args.version:
-        log.info("0.0.0")
+        log.info("Version number 0.0.0")
+        
+    try:
+        log.debug("Loading default credentials")
+        cwd = os.path.dirname(os.path.realpath(__file__))
+        secure_path = os.path.join(os.path.dirname(cwd), "secure")
+        pyscopg2_connection_string = open(os.path.join(secure_path, "private_psycopg2_connection_string.txt")).read()
+        gsconfig_url = open(os.path.join(secure_path, "private_gsconfig_url.txt")).read()
+        gsconfig_username = open(os.path.join(secure_path, "private_gsconfig_username.txt")).read()
+        gsconfig_password = open(os.path.join(secure_path, "private_gsconfig_key.txt")).read()
 
-    args.demo = True 
-    if args.demo:
-       log.info("Running ogr2pg2gs with demo data")
-
-       #check for demo data
-       try:
-           log.debug("Setting demo data variables")
-           cwd = os.path.dirname(os.path.realpath(__file__))
-           secure_path = os.path.join(os.path.dirname(cwd), "secure")
-           pyscopg2_connection_string = open(os.path.join(secure_path, "private_psycopg2_connection_string.txt")).read()
-           gsconfig_url = open(os.path.join(secure_path, "private_gsconfig_url.txt")).read()
-           gsconfig_username = open(os.path.join(secure_path, "private_gsconfig_username.txt")).read()
-           gsconfig_password = open(os.path.join(secure_path, "private_gsconfig_key.txt")).read()
-
-##           in_path = os.path.join(cwd, "data/extent.kml")
-##           table_name = "gs_extent"
-           
-       except FileNotFoundError as e:
-           log.error("Missing demo data")
-           log.error(str(e))
+   except FileNotFoundError as e:
+       log.error("Missing default credentials")
+       log.error(str(e))
 
 
     log.info("Connecting to database")        
