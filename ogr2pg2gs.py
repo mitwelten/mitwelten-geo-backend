@@ -45,7 +45,7 @@ def dropTable(cur, table_name):
     :rtype: None
     """
 
-    cur.execute("DROP TABLE IF EXISTS \"%s\"", (table_name,))
+    cur.execute("DROP TABLE IF EXISTS \"%s\";", (table_name,))
 
 def insertVector(cur, in_path,table_name):
     log.info("Attempting to create table %s from %s" % (table_name, in_path))
