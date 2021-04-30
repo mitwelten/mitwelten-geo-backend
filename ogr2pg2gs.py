@@ -120,6 +120,7 @@ if __name__ == "__main__":
 
     log.info("Connecting to database")        
     conn = psycopg2.connect(pyscopg2_connection_string)
+    conn.autocommit = True
     cur = conn.cursor()
 
     if args.droptable:
