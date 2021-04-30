@@ -129,3 +129,7 @@ if __name__ == "__main__":
     insertVector(cur, in_path, table_name)
 
 
+    logger.debug("Commiting changes to database and closing connection")
+    conn.commit()
+    conn.close()
+
