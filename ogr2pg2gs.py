@@ -45,7 +45,7 @@ def dropTable(cur, table_name):
     :rtype: None
     """
 
-    cur.execute("DROP TABLE IF EXISTS %s", (table_name,))
+    cur.execute("DROP TABLE IF EXISTS \"%s\"", (table_name,))
 
 def insertVector(cur, in_path,table_name):
     log.info("Attempting to create table %s from %s" % (table_name, in_path))
@@ -84,7 +84,7 @@ def publishVector(cur, table_name, geoserver_user):
 
 parser = argparse.ArgumentParser(description="Store vector data from a file in a PostGIS database and publish it to GeoServer")
 parser.add_argument("-v", "--version", help="show program version", action="store_true")
-parser.add_argument("-d", "--demo", help="run with demo data", action="store_true")
+parser.add_argument("--demo", help="run with demo data", action="store_true")
 parser.add_argument("-l", "--log", help="Log activity to the specified file", action="store_true")
 parser.add_argument("--droptable", help="Drop table if it already exists", action="store_true")
 parser.add_argument("name", help="The table name to use for the vector data in PostGIS", type=str)
