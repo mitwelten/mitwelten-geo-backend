@@ -128,7 +128,7 @@ if __name__ == "__main__":
         conn.commit()
         conn.close()
 
-        log.debug("Reopening connection to database"
+        log.debug("Reopening connection to database")
         conn = psycopg2.connect(pyscopg2_connection_string)
         cur = conn.cursor()
 
