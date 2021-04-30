@@ -1,6 +1,7 @@
 import logging
 import sys
 import argparse
+import pathlib
 import os 
 import psycopg2
 import tempfile
@@ -32,6 +33,19 @@ def existTable(cur, table_name):
     cur.execute("SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name=%s)", (table_name,))
 
     return cur.fetchone()[0]
+
+def dropTable(cur, table_name):
+    """Check to see if a table 
+
+    :param cur: PostGIS database cursor
+    :type cur: psycopg2.extensions.cursor
+    :param cur: PostGIS database table name
+    :type cur: str
+
+    :rtype: None
+    """
+
+    cur.execute("DROP TABLE IF EXISTS %s", (table_name,))
 
 def insertVector(cur, in_path,table_name):
     log.info("Attempting to create table %s from %s" % (table_name, in_path))
@@ -68,10 +82,13 @@ def publishVector(cur, table_name, geoserver_user):
         raise e
 
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description="Store vector data from a file in a PostGIS database and publish it to GeoServer")
 parser.add_argument("-v", "--version", help="show program version", action="store_true")
 parser.add_argument("-d", "--demo", help="run with demo data", action="store_true")
-parser.add_argument("-l", "--log", help="", action="store_true")
+parser.add_argument("-l", "--log", help="Log activity to the specified file", action="store_true")
+parser.add_argument("--droptable", help="Drop table if it already exists", action="store_true")
+parser.add_argument("name", help="The table name to use for the vector data in PostGIS", type=str)
+parser.add_argument("path", help="Vector data to store in PostGIS and publish to GeoServer", type=pathlib.Path)
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -101,10 +118,12 @@ if __name__ == "__main__":
            log.error(str(e))
 
 
-
-
+    log.info("Connecting to database")        
     conn = psycopg2.connect(pyscopg2_connection_string)
     cur = conn.cursor()
+
+    if args.droptable:
+        dropTable(cur, table_name)
 
     insertVector(cur, in_path, table_name)
 
