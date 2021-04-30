@@ -124,6 +124,7 @@ if __name__ == "__main__":
 
     if args.droptable:
         dropTable(cur, table_name)
+        conn.commit()
 
     insertVector(cur, in_path, table_name)
 
