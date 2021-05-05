@@ -45,7 +45,9 @@ def dropTable(cur, table_name):
     :rtype: None
     """
 
-    cur.execute("DROP TABLE IF EXISTS \"%s\"", (table_name,))
+    sql = cur.mogrify("DROP TABLE IF EXISTS \"%s\"", (table_name,))
+    log.debug("Sending SQL: %s" % sql)
+    cur.execute(sql)
 
 def insertVector(cur, in_path,table_name):
     log.info("Attempting to create table %s from %s" % (table_name, in_path))
@@ -116,7 +118,7 @@ if __name__ == "__main__":
     conn = psycopg2.connect(pyscopg2_connection_string)
     conn.autocommit = True
     cur = conn.cursor()
-    cur.execute("DROP TABLE IF EXISTS \"gs_extent\"")
+    #cur.execute("DROP TABLE IF EXISTS \"gs_extent\"")
 
     if args.droptable:
         log.info("Dropping table %s if it exists" % table_name)
