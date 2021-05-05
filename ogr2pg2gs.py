@@ -3,10 +3,10 @@ import sys
 import argparse
 import pathlib
 import os 
-import psycopg2
+import psycopg2 #pip3 install psycopg2
 import tempfile
-from lib import ogr2ogr
-from geoserver.catalog import Catalog
+from lib import ogr2ogr #pip3 install GDAL>2.4.0
+from geoserver.catalog import Catalog #pip3 install geoserver-restconfig
 
 log = logging.getLogger("ogr2ps2gs")
 log.setLevel(logging.DEBUG)
@@ -120,28 +120,27 @@ if __name__ == "__main__":
         log.error("Missing default credentials")
         log.error(str(e))
 
-
-    log.info("Connecting to database")        
+    log.info("Connecting to PostgreSQL")        
     conn = psycopg2.connect(pyscopg2_connection_string)
     conn.autocommit = True
     cur = conn.cursor()
-    #cur.execute("DROP TABLE IF EXISTS \"gs_extent\"")
+
+    log.info("Connecting to GeoServer")
+    cat = Catalog(gsconfig_url, gsconfig_username, gsconfig_password)
+    
 
     if args.droptable:
         log.info("Dropping table %s if it exists" % table_name)
         dropTable(cur, table_name)
-##        cur.close()
-##        conn.commit()
-##        conn.close()
-##
-##        log.debug("Reopening connection to database")
-##        conn = psycopg2.connect(pyscopg2_connection_string)
-##        cur = conn.cursor()
 
+    log.info("Pushing data to PostgreSQL")
     insertVector(cur, in_path, table_name)
 
+    log.info("Pushing data to GeoServer")
+    pass
 
     log.debug("Commiting changes to database and closing connection")
+    cur.close()
     conn.commit()
     conn.close()
 
