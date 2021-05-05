@@ -30,7 +30,10 @@ def existTable(cur, table_name):
     :rtype: bool
     """
 
-    cur.execute("SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name=%s)", (table_name,))
+    sql = cur.mogrify("SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name=%s)", (table_name,))
+
+    log.debug("Sending SQL: %s" % sql)    
+    cur.execute(sql)
 
     return cur.fetchone()[0]
 
