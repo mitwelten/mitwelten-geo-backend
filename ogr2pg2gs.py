@@ -23,8 +23,8 @@ def existTable(cur, table_name):
 
     :param cur: PostGIS database cursor
     :type cur: psycopg2.extensions.cursor
-    :param cur: PostGIS database table name
-    :type cur: str
+    :param table_name: PostGIS database table name
+    :type table_name: str
 
     :return: If the table already exists in the database
     :rtype: bool
@@ -42,8 +42,8 @@ def dropTable(cur, table_name):
 
     :param cur: PostGIS database cursor
     :type cur: psycopg2.extensions.cursor
-    :param cur: PostGIS database table name
-    :type cur: str
+    :param table_name: PostGIS database table name
+    :type table_name: str
 
     :rtype: None
     """
@@ -60,13 +60,18 @@ def dropTable(cur, table_name):
     cur.execute(sql)
 
 def insertVector(cur, in_path,table_name):
-    log.info("Attempting to create table %s from %s" % (table_name, in_path))
-    
-    log.debug("Checking if table %s already exists" % table_name)
-    if existTable(cur, table_name):
-        log.error("Table %s already exists" % table_name)
-        raise psycopg2.errors.DuplicateTable("%s table already exists" % table_name)
+    """Insert vector data into a PostGIS database
 
+    :param cur: PostGIS database cursor
+    :type cur: psycopg2.extensions.cursor
+    :param in_path: Path to vector data
+    :type in_path: str
+    :param table_name: PostGIS database table name
+    :type table_name: str
+
+    :rtype: None
+    """
+    
     log.debug("Converting file %s to PostgreSQL" % in_path)
     tmp = tempfile.NamedTemporaryFile()
     try:
@@ -76,14 +81,11 @@ def insertVector(cur, in_path,table_name):
         raise e
 
     log.debug("Attempting to create table %s" % table_name)
-    cur.execute(tmp.read())
-
-    if existTable(cur, table_name):
-        log.debug("Table %s created" % table_name)
-    else:
-        log.error("Could not create table %s" % table_name)
-        raise psycopg2.errors.ConnectionException("Table %" % table_name)
-
+    try:
+        cur.execute(tmp.read())
+    except psycopg2.errors.DuplicateTable as e:
+        log.error("Table %s already exists" % table_name)
+        raise psycopg2.errors.DuplicateTable("%s table already exists" % table_name)
 
 def publishVector(cur, table_name, geoserver_user):
     log.debug("Adding table read premisison to user %s" % geoserver_user)
