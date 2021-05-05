@@ -45,7 +45,7 @@ def dropTable(cur, table_name):
     :rtype: None
     """
 
-    sql = cur.mogrify("DROP TABLE IF EXISTS \"%s\"", (table_name,))
+    sql = cur.mogrify("DROP TABLE IF EXISTS %s", (table_name,))
     log.debug("Sending SQL: %s" % sql)
     cur.execute(sql)
 
