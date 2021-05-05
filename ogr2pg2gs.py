@@ -45,7 +45,7 @@ def dropTable(cur, table_name):
     :rtype: None
     """
 
-    log.warn("The following command is susceptible to SQL injection.")
+    log.warning("The following command is susceptible to SQL injection.")
 
     #psycopg2 does not correctly/safely mogrify the following command
     #consider using a regular expression to check for safety
