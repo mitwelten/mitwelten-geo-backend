@@ -45,7 +45,14 @@ def dropTable(cur, table_name):
     :rtype: None
     """
 
-    sql = cur.mogrify("DROP TABLE IF EXISTS %s", (table_name,))
+    log.warn("The following command is susceptible to SQL injection.")
+
+    #psycopg2 does not correctly/safely mogrify the following command
+    #consider using a regular expression to check for safety
+    #sql = cur.mogrify("DROP TABLE IF EXISTS %s", (table_name,))
+
+    sql = "DROP TABLE IF EXISTS \"%s\"" % table_name
+
     log.debug("Sending SQL: %s" % sql)
     cur.execute(sql)
 
