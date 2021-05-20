@@ -87,23 +87,27 @@ def insertVector(cur, in_path,table_name):
         log.error("Table %s already exists" % table_name)
         raise psycopg2.errors.DuplicateTable("%s table already exists" % table_name)
 
-def publishVector(cur, table_name, geoserver_user, cat):
-    log.debug("Adding table read premisison to user %s" % geoserver_user)
-    try:
-        sql = cur.mogrify("GRANT SELECT ON TABLE %s TO %s" % (table_name, geoserver_user,))
-        log.debug("Sending SQL: %s" % sql)
-        cur.execute(sql)
-        
-    except psycopg2.errors.UndefinedTable as e:
-        log.error("Table %s does not exist" % table_name)
-        raise e
+def publishVector(cur, table_name, pyscopg2_connection_string, geoserver_user, cat):
+##    log.debug("Adding table read premisison to user %s" % geoserver_user)
+##    try:
+##        sql = cur.mogrify("GRANT SELECT ON TABLE %s TO %s" % (table_name, geoserver_user,))
+##        log.debug("Sending SQL: %s" % sql)
+##        cur.execute(sql)
+##        
+##    except psycopg2.errors.UndefinedTable as e:
+##        log.error("Table %s does not exist" % table_name)
+##        raise e
 
     log.debug("Creating workspace")
     ws = cat.create_workspace('newWorkspaceName','newWorkspaceUri')
 
     log.debug("Create PostGIS store")
     ds = cat.create_datastore(newDatastoreName,newWorkspaceName)
-    ds.connection_parameters.update(host='localhost', port='5432', database='postgis', user='postgres', passwd='password', dbtype='postgis', schema='postgis')
+    _, dbname, _, user, _, host, _, password, _, sslmode = pyscopg2_connection_string.split("=")
+    port = "5432"
+    dbtype='postgis'
+    schema="public"
+    ds.connection_parameters.update(host=host, port=port, database=dbname, user=user, passwd=password, dbtype=dbtype, schema=schema)
     cat.save(ds)    
 
     log.debug("Add layer")
@@ -156,7 +160,7 @@ if __name__ == "__main__":
     insertVector(cur, in_path, table_name)
 
     log.info("Pushing data to GeoServer")
-    publishVector(cur, table_name, geoserver_user, cat)
+    publishVector(cur, table_name, pyscopg2_connection_string, geoserver_user, cat)
 
     log.debug("Commiting changes to database and closing connection")
     cur.close()
