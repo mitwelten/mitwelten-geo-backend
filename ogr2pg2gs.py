@@ -107,7 +107,7 @@ def publishVector(cur, table_name, postgis_connection_string, cat):
     port = "5432"
     dbtype='postgis'
     schema="public"
-    ds.connection_parameters.update(host=host, port=port, database=dbname, user=user, passwd=password, dbtype=dbtype, schema=schema)
+    ds.connection_parameters.update(host=host, port=port, database=dbname, user=user, password=password, dbtype=dbtype, schema=schema)
     cat.save(ds)    
 
     log.debug("Add layer")
