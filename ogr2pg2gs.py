@@ -87,7 +87,7 @@ def insertVector(cur, in_path,table_name):
         log.error("Table %s already exists" % table_name)
         raise psycopg2.errors.DuplicateTable("%s table already exists" % table_name)
 
-def publishVector(cur, table_name, pyscopg2_connection_string, geoserver_user, cat):
+def publishVector(cur, table_name, postgis_connection_string, cat):
 ##    log.debug("Adding table read premisison to user %s" % geoserver_user)
 ##    try:
 ##        sql = cur.mogrify("GRANT SELECT ON TABLE %s TO %s" % (table_name, geoserver_user,))
@@ -103,7 +103,7 @@ def publishVector(cur, table_name, pyscopg2_connection_string, geoserver_user, c
 
     log.debug("Create PostGIS store")
     ds = cat.create_datastore(newDatastoreName,newWorkspaceName)
-    _, dbname, _, user, _, host, _, password, _, sslmode = pyscopg2_connection_string.split("=")
+    _, dbname, _, user, _, host, _, password, _, sslmode = postgis_connection_string.split("=")
     port = "5432"
     dbtype='postgis'
     schema="public"
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     insertVector(cur, in_path, table_name)
 
     log.info("Pushing data to GeoServer")
-    publishVector(cur, table_name, pyscopg2_connection_string, geoserver_user, cat)
+    publishVector(cur, table_name, pyscopg2_connection_string, cat)
 
     log.debug("Commiting changes to database and closing connection")
     cur.close()
