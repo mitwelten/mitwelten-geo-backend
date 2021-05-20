@@ -135,7 +135,7 @@ if __name__ == "__main__":
         cwd = os.path.dirname(os.path.realpath(__file__))
         secure_path = os.path.join(os.path.dirname(cwd), "secure")
         pyscopg2_connection_string = open(os.path.join(secure_path, "private_psycopg2_connection_string.txt")).read()
-        gsconfig_url = open(os.path.join(secure_path, "private_gsconfig_url.txt")).read()
+        gsconfig_url = open(os.path.join(secure_path, "private_gsconfig_local_url.txt")).read()
         gsconfig_username = open(os.path.join(secure_path, "private_gsconfig_username.txt")).read()
         gsconfig_password = open(os.path.join(secure_path, "private_gsconfig_key.txt")).read()
 
