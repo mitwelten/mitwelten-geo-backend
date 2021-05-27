@@ -30,6 +30,13 @@ PostgREST runs by default on port 3000.
 
 ## Usage
 
+**Start PostgREST**
+```sh
+./postgrest my_config_file.conf
+```
+
+Or use a [systemd service](postgrest.service)
+
 Example table `location`
 
 name|type
