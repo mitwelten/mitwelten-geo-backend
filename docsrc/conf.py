@@ -8,6 +8,7 @@ project = 'Mitwelten'
 extensions = [
 #    'sphinx.ext.extlinks',
     'sphinx.ext.autodoc',
+    'sphinxarg.ext',
 #    'sphinx.ext.todo',
 #    'sphinx.ext.mathjax',
 #    'sphinx.ext.viewcode',

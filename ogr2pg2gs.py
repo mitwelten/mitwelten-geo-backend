@@ -114,15 +114,18 @@ def publishVector(cur, table_name, postgis_connection_string, cat):
     ft = cat.publish_featuretype('newLayerName', ds, 'EPSG:4326', srs='EPSG:4326')
     cat.save(ft)
 
-parser = argparse.ArgumentParser(description="Store vector data from a file in a PostGIS database and publish it to GeoServer")
-parser.add_argument("-v", "--version", help="show program version", action="store_true")
-parser.add_argument("-l", "--log", help="Log activity to the specified file", action="store_true")
-parser.add_argument("-dt", "--droptable", help="Drop table if it already exists", action="store_true")
-parser.add_argument("name", help="The table name to use for the vector data in PostGIS", type=str)
-parser.add_argument("path", help="Vector data to store in PostGIS and publish to GeoServer", type=pathlib.Path)
+def construct_parser():
+    parser = argparse.ArgumentParser(description="Store vector data from a file in a PostGIS database and publish it to GeoServer")
+    parser.add_argument("-v", "--version", help="show program version", action="store_true")
+    parser.add_argument("-l", "--log", help="Log activity to the specified file", action="store_true")
+    parser.add_argument("-dt", "--droptable", help="Drop table if it already exists", action="store_true")
+    parser.add_argument("name", help="The table name to use for the vector data in PostGIS", type=str)
+    parser.add_argument("path", help="Vector data to store in PostGIS and publish to GeoServer", type=pathlib.Path)
+
+    return parser
 
 if __name__ == "__main__":
-    args = parser.parse_args()
+    args = construct_parser().parse_args()
 
     in_path = os.path.abspath(str(args.path))
     table_name = args.name
