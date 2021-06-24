@@ -6,7 +6,8 @@ OGR2PG2GS
    :func: construct_parser
    :prog: ogr2pg2gs
 
-
+Python Functions
+----------------
 
 .. automodule:: ogr2pg2gs
     :members:
