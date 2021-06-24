@@ -1,9 +1,9 @@
 Mitwelten.org Geospatial Backend
 ================================
 
-Work in progress. Questions? Contact `mitwelten.technik@fhnw.ch <mailto:mitwelten.technik@fhnw.ch>`_
-
 .. toctree::
    :maxdepth: 4
 
    ogr2pg2gs
+
+Work in progress. Questions? Contact `mitwelten.technik@fhnw.ch <mailto:mitwelten.technik@fhnw.ch>`_
