@@ -145,6 +145,7 @@ if __name__ == "__main__":
     except FileNotFoundError as e:
         log.error("Missing default credentials")
         log.error(str(e))
+        raise e
 
     log.info("Connecting to PostgreSQL")        
     conn = psycopg2.connect(pyscopg2_connection_string)
