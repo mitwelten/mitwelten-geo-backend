@@ -2,7 +2,7 @@ from paho.mqtt import client as mqtt
 import traceback
 import ssl
 import json
-from configuration import get_config
+from confighelper import get_config
 from postgresqladapter import insert_env_data, insert_pax_data
 
 config = get_config()
