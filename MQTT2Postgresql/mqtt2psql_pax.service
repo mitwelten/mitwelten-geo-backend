@@ -1,0 +1,15 @@
+
+[Unit]
+Requires=network.target
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/MQTT2Postgresql
+ExecStart=/usr/bin/python3 /home/ubuntu/MQTT2Postgresql/MQTT2Postgresql.py -i /home/ubuntu/MQTT2Postgresql/configuration/pax-app-config.conf
+Restart=always
+TimeoutSec=10
+
+[Install]
+WantedBy=multi-user.target
