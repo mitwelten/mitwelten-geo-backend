@@ -20,9 +20,8 @@ def insert_env_data(deveui, voltage, temperature, humidity, moisture, timestamp)
         temperature = None
     cur.execute(
         """INSERT INTO envsensordata (node_id,voltage,temperature, humidity, moisture,  time) 
-        VALUES ((SELECT node_id from idmapping where deveui = %s),%s, %s, %s, %s, %s)"""(
-            deveui, voltage, temperature, humidity, moisture, timestamp
-        ),
+        VALUES ((SELECT node_id from idmapping where deveui = %s),%s, %s, %s, %s, %s)""",
+        (deveui, voltage, temperature, humidity, moisture, timestamp),
     )
     conn.commit()
 
@@ -31,9 +30,7 @@ def insert_pax_data(deveui, voltage, pax, timestamp):
     voltage = voltage / 1000  # mV to V
     cur.execute(
         """INSERT INTO paxsensordata (node_id,voltage,pax,time) 
-        VALUES ((SELECT node_id from idmapping where deveui = %s),%s,%s,%s)"""(
-            deveui, voltage, pax, timestamp
-        ),
+        VALUES ((SELECT node_id from idmapping where deveui = %s),%s,%s,%s)""",
+        (deveui, voltage, pax, timestamp),
     )
     conn.commit()
-
