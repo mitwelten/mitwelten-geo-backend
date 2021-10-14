@@ -3,7 +3,7 @@ Open Geospatial Consortium Web Services (OWS)
 
 The `Open Geospatial Consortium <https://www.ogc.org/>`_ (OGC) is a standards organization that has established web service (OWS) protocols for the exchange and processing of spatial data. The OWS address for Mitwelten is:
 
-`https://fhnw-imvs-afe077e3-1c48-407a-b75c-c8cb4a9076a0.try.yaler.io/geoserver/ows <https://fhnw-imvs-afe077e3-1c48-407a-b75c-c8cb4a9076a0.try.yaler.io/geoserver/ows>`_
+`https://geo.mitwelten.org/geoserver/ows <https://geo.mitwelten.org/geoserver/ows>`_
 
 Table Joining Service (TJS)
 ---------------------------
